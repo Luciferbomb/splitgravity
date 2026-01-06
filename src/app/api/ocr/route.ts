@@ -81,8 +81,8 @@ export async function POST(request: NextRequest) {
             )
         }
 
-        // Extract base64 data from data URL
-        const base64Data = image.replace(/^data:image\/\w+;base64,/, '')
+        // Extract base64 data from data URL (support all image formats)
+        const base64Data = image.replace(/^data:image\/[^;]+;base64,/, '')
 
         // Use Gemini 2.5 Flash for image analysis
         const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
