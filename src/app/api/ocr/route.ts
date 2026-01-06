@@ -81,8 +81,31 @@ export async function POST(request: NextRequest) {
             )
         }
 
+        // Log image data format for debugging
+        console.log('Image data format:', image.substring(0, 50))
+
+        // Validate data URL format
+        if (!image.startsWith('data:image/')) {
+            console.error('Invalid image format. Expected data URL, got:', image.substring(0, 100))
+            return NextResponse.json(
+                { error: 'Invalid image format. Please try again or use a different image.' },
+                { status: 400 }
+            )
+        }
+
         // Extract base64 data from data URL (support all image formats)
-        const base64Data = image.replace(/^data:image\/[^;]+;base64,/, '')
+        let base64Data = image.replace(/^data:image\/[^;]+;base64,/, '')
+
+        // Check if extraction worked
+        if (base64Data === image) {
+            console.error('Failed to extract base64 data. Original format:', image.substring(0, 100))
+            return NextResponse.json(
+                { error: 'Failed to process image format. Please try taking another photo.' },
+                { status: 400 }
+            )
+        }
+
+        console.log('Base64 data length:', base64Data.length)
 
         // Use Gemini 2.5 Flash for image analysis
         const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
@@ -139,8 +162,9 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(cleanedData)
     } catch (error) {
         console.error('OCR Error:', error)
+        console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace')
         return NextResponse.json(
-            { error: 'Failed to process receipt. Please try again or enter items manually.' },
+            { error: error instanceof Error ? error.message : 'Failed to process receipt. Please try again or enter items manually.' },
             { status: 500 }
         )
     }
