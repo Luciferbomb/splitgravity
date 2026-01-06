@@ -71,16 +71,47 @@ export function ReceiptScanner({ onScanComplete, onCancel }: ReceiptScannerProps
         const video = videoRef.current
         const canvas = canvasRef.current
 
-        canvas.width = video.videoWidth
-        canvas.height = video.videoHeight
+        // Get original dimensions
+        const originalWidth = video.videoWidth
+        const originalHeight = video.videoHeight
+
+        // iOS has strict canvas size limits - resize if needed
+        const MAX_DIMENSION = 2048
+        let targetWidth = originalWidth
+        let targetHeight = originalHeight
+
+        if (originalWidth > MAX_DIMENSION || originalHeight > MAX_DIMENSION) {
+            const aspectRatio = originalWidth / originalHeight
+            if (originalWidth > originalHeight) {
+                targetWidth = MAX_DIMENSION
+                targetHeight = MAX_DIMENSION / aspectRatio
+            } else {
+                targetHeight = MAX_DIMENSION
+                targetWidth = MAX_DIMENSION * aspectRatio
+            }
+        }
+
+        canvas.width = targetWidth
+        canvas.height = targetHeight
 
         const ctx = canvas.getContext('2d')
         if (ctx) {
-            ctx.drawImage(video, 0, 0)
-            const imageData = canvas.toDataURL('image/jpeg', 0.9)
-            setImage(imageData)
-            stopCamera()
-            processImage(imageData)
+            // Draw resized image
+            ctx.drawImage(video, 0, 0, targetWidth, targetHeight)
+
+            try {
+                // Use lower quality for iOS to reduce file size
+                const imageData = canvas.toDataURL('image/jpeg', 0.7)
+                setImage(imageData)
+                stopCamera()
+                processImage(imageData)
+            } catch (err) {
+                console.error('Canvas toDataURL error:', err)
+                alert(`DEBUG: Canvas error - ${err instanceof Error ? err.message : String(err)}`)
+                setError('Failed to process photo. Try uploading an image instead.')
+                stopCamera()
+                setMode('select')
+            }
         }
     }
 
