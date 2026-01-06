@@ -7,7 +7,10 @@ export async function PATCH(request: NextRequest) {
         const body = await request.json()
         const { billId, userId, amountPaid } = body
 
+        console.log('PATCH /api/payments received:', { billId, userId, amountPaid })
+
         if (!billId || !userId || amountPaid === undefined) {
+            console.error('Missing required fields:', { billId, userId, amountPaid })
             return NextResponse.json(
                 { error: 'billId, userId, and amountPaid are required' },
                 { status: 400 }
@@ -24,9 +27,15 @@ export async function PATCH(request: NextRequest) {
             },
         })
 
+        console.log('Payment updated successfully:', participant)
         return NextResponse.json(participant)
     } catch (error) {
         console.error('Error updating payment:', error)
+        // Log the full error object to see the cause (e.g. RecordNotFound)
+        if (error instanceof Error) {
+            console.error('Error message:', error.message)
+            console.error('Error stack:', error.stack)
+        }
         return NextResponse.json(
             { error: 'Failed to update payment' },
             { status: 500 }

@@ -113,46 +113,74 @@ export default function BillPage() {
     }
 
     const handleToggleSelect = async (itemId: string, claimedQuantity?: number) => {
-        if (!currentUser || isSelecting) return
+        if (!currentUser || !bill) return
 
-        setIsSelecting(true)
+        // 1. Optimistic Update
+        const previousBill = bill
 
-        try {
-            // Find the item to get its total quantity
-            const item = bill?.items.find((i) => i.id === itemId)
+        const updatedItems = bill.items.map(item => {
+            if (item.id !== itemId) return item
+
+            let newSelections = [...item.selections]
+            const existingSelectionIndex = newSelections.findIndex(s => s.userId === currentUser.id)
 
             if (claimedQuantity === 0) {
-                // Delete selection
+                // Remove selection
+                if (existingSelectionIndex !== -1) {
+                    newSelections.splice(existingSelectionIndex, 1)
+                }
+            } else {
+                // Add or Update selection
+                const splitRatio = claimedQuantity ? claimedQuantity / item.quantity : 1
+
+                const newSelection = {
+                    id: existingSelectionIndex !== -1 ? newSelections[existingSelectionIndex].id : `temp-${Date.now()}`,
+                    userId: currentUser.id,
+                    splitRatio,
+                    user: {
+                        id: currentUser.id,
+                        name: currentUser.name,
+                        email: currentUser.email || ''
+                    }
+                }
+
+                if (existingSelectionIndex !== -1) {
+                    newSelections[existingSelectionIndex] = newSelection
+                } else {
+                    newSelections.push(newSelection)
+                }
+            }
+
+            return { ...item, selections: newSelections }
+        })
+
+        setBill({ ...bill, items: updatedItems })
+
+        // 2. Background API Call
+        try {
+            const item = bill.items.find((i) => i.id === itemId)
+
+            if (claimedQuantity === 0) {
                 await fetch('/api/selections', {
                     method: 'DELETE',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        itemId,
-                        userId: currentUser.id,
-                    }),
+                    body: JSON.stringify({ itemId, userId: currentUser.id }),
                 })
             } else {
-                // Calculate splitRatio based on claimed quantity
-                const splitRatio = item && claimedQuantity
-                    ? claimedQuantity / item.quantity
-                    : 1
-
+                const splitRatio = item && claimedQuantity ? claimedQuantity / item.quantity : 1
                 await fetch('/api/selections', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        itemId,
-                        userId: currentUser.id,
-                        splitRatio,
-                    }),
+                    body: JSON.stringify({ itemId, userId: currentUser.id, splitRatio }),
                 })
             }
 
-            await fetchBill()
+            // Sync in background without blocking UI
+            fetchBill()
         } catch (error) {
             console.error('Failed to toggle selection:', error)
-        } finally {
-            setIsSelecting(false)
+            // Revert on error
+            setBill(previousBill)
         }
     }
 

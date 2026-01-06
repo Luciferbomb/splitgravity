@@ -2,106 +2,138 @@
 
 import { Header } from '@/components/layout/Header'
 import { JoinBillForm } from '@/components/bill/ShareBill'
+import { BentoGrid, BentoGridItem } from '@/components/ui/bento-grid'
 import Link from 'next/link'
-import { Receipt, Users, Calculator, Zap, ArrowRight } from 'lucide-react'
+import { Users, Calculator, Zap, ScanLine, ArrowRight, CheckCircle2 } from 'lucide-react'
+
+const items = [
+  {
+    title: "AI Receipt Scanning",
+    description: "Upload a photo and let our AI extract items and prices automatically with high precision.",
+    header: <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center"><ScanLine className="h-8 w-8 text-indigo-600" /></div>,
+    icon: <ScanLine className="h-4 w-4 text-indigo-600" />,
+  },
+  {
+    title: "Real-time Sync",
+    description: "Everyone selects their own items on their own phone simultaneously. No more passing the receipt around.",
+    header: <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center"><Users className="h-8 w-8 text-blue-600" /></div>,
+    icon: <Users className="h-4 w-4 text-blue-600" />,
+  },
+  {
+    title: "Smart Math",
+    description: "We handle tax, service charges, and discounts proportionally. Fair splitting, every time.",
+    header: <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center"><Calculator className="h-8 w-8 text-emerald-600" /></div>,
+    icon: <Calculator className="h-4 w-4 text-emerald-600" />,
+  },
+  {
+    title: "Instant Settlement",
+    description: "See exactly who owes whom to minimize transactions. Settle up via UPI or cash instantly.",
+    header: <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center"><Zap className="h-8 w-8 text-amber-600" /></div>,
+    icon: <Zap className="h-4 w-4 text-amber-600" />,
+  },
+];
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-slate-50">
       <Header showNav={true} />
 
-      <main className="container py-8 space-y-12">
+      <main>
         {/* Hero Section */}
-        <section className="text-center space-y-6 animate-fade-in">
-          <div className="relative">
-            <div className="absolute inset-0 blur-3xl opacity-30 bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)]" />
-            <h1 className="relative text-4xl md:text-5xl font-bold">
-              Split Bills
-              <span className="block text-gradient">Effortlessly</span>
-            </h1>
+        <section className="relative pt-20 pb-32 overflow-hidden">
+          <div className="container relative z-10">
+            <div className="max-w-4xl mx-auto text-center space-y-8">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-sm font-medium mb-4">
+                <span className="flex h-2 w-2 rounded-full bg-indigo-600"></span>
+                v2.0 is now live
+              </div>
+
+              <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-slate-900">
+                Split bills with <br />
+                <span className="text-indigo-600">precision & ease.</span>
+              </h1>
+
+              <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
+                Stop doing math at the dinner table. Scan your receipt, tap your items, and let 19-20 handle the tax, tip, and settlements instantly.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
+                <Link
+                  href="/bill/new"
+                  className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white transition-all bg-indigo-600 rounded-xl hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                >
+                  <ScanLine className="w-5 h-5 mr-2" />
+                  Start Scanning
+                </Link>
+                <Link
+                  href="/join"
+                  className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-slate-700 transition-all bg-white border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-200 focus:ring-offset-2"
+                >
+                  <Users className="w-5 h-5 mr-2" />
+                  Join Bill
+                </Link>
+              </div>
+            </div>
           </div>
 
-          <p className="text-lg text-[var(--text-secondary)] max-w-md mx-auto">
-            Select your items, and we&apos;ll calculate everyone&apos;s share including
-            tax and tips automatically.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-            <Link href="/bill/new" className="btn btn-primary">
-              <Receipt size={20} />
-              Create New Bill
-              <ArrowRight size={16} />
-            </Link>
-            <Link href="/join" className="btn btn-secondary">
-              <Users size={20} />
-              Join a Bill
-            </Link>
+          {/* Background decoration */}
+          <div className="absolute top-0 left-0 right-0 h-full overflow-hidden -z-10 pointer-events-none">
+            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-100/50 blur-3xl" />
+            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-100/50 blur-3xl" />
           </div>
         </section>
 
-        {/* Quick Join */}
-        <section className="glass-card p-6 animate-slide-up">
-          <h2 className="text-lg font-semibold mb-4 text-center">
-            Have a code? Join instantly
-          </h2>
-          <JoinBillForm />
+        {/* Quick Join Section */}
+        <section className="py-12 bg-white border-y border-slate-100">
+          <div className="container">
+            <div className="max-w-md mx-auto">
+              <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+                <div className="text-center mb-6">
+                  <h2 className="text-lg font-semibold text-slate-900 flex items-center justify-center gap-2">
+                    <Zap size={18} className="text-amber-500" />
+                    Have a code? Join instantly
+                  </h2>
+                </div>
+                <JoinBillForm />
+              </div>
+            </div>
+          </div>
         </section>
 
-        {/* Features */}
-        <section className="space-y-6">
-          <h2 className="text-xl font-semibold text-center">How It Works</h2>
+        {/* Features Grid */}
+        <section className="py-24 bg-slate-50">
+          <div className="container space-y-16">
+            <div className="text-center space-y-4 max-w-2xl mx-auto">
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900">Everything you need</h2>
+              <p className="text-slate-600 text-lg">Designed for the modern dining experience. Simple, fast, and accurate.</p>
+            </div>
 
-          <div className="grid gap-4">
-            <FeatureCard
-              icon={<Receipt className="text-[var(--primary)]" size={24} />}
-              title="Add Items"
-              description="Enter bill items manually or scan your receipt"
-            />
-            <FeatureCard
-              icon={<Users className="text-[var(--secondary)]" size={24} />}
-              title="Invite Friends"
-              description="Share a code so everyone can join and select their items"
-            />
-            <FeatureCard
-              icon={<Calculator className="text-[var(--accent)]" size={24} />}
-              title="Auto Calculate"
-              description="Tax and tips distributed proportionally based on selections"
-            />
-            <FeatureCard
-              icon={<Zap className="text-[var(--warning)]" size={24} />}
-              title="Settle Up"
-              description="See who owes what and track payments"
-            />
+            <BentoGrid className="max-w-6xl mx-auto">
+              {items.map((item, i) => (
+                <BentoGridItem
+                  key={i}
+                  title={item.title}
+                  description={item.description}
+                  header={item.header}
+                  icon={item.icon}
+                  className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-all"
+                />
+              ))}
+            </BentoGrid>
           </div>
         </section>
       </main>
 
       {/* Footer */}
-      <footer className="container py-8 text-center text-sm text-[var(--text-muted)]">
-        <p>Made with ❤️ for hassle-free bill splitting</p>
+      <footer className="bg-white border-t border-slate-200 py-12">
+        <div className="container text-center">
+          <p className="text-slate-500 text-sm">
+            © {new Date().getFullYear()} 19-20. Made with ❤️ for hassle-free bill splitting.
+          </p>
+        </div>
       </footer>
     </div>
   )
 }
 
-function FeatureCard({
-  icon,
-  title,
-  description,
-}: {
-  icon: React.ReactNode
-  title: string
-  description: string
-}) {
-  return (
-    <div className="glass-card p-4 flex items-start gap-4 animate-slide-up">
-      <div className="w-12 h-12 rounded-xl bg-[var(--surface-elevated)] flex-center shrink-0">
-        {icon}
-      </div>
-      <div>
-        <h3 className="font-semibold mb-1">{title}</h3>
-        <p className="text-sm text-[var(--text-secondary)]">{description}</p>
-      </div>
-    </div>
-  )
-}
+

@@ -26,7 +26,7 @@ export function ShareBill({ groupCode }: ShareBillProps) {
         if (navigator.share) {
             try {
                 await navigator.share({
-                    title: 'Join my bill on SplitGravity',
+                    title: 'Join my bill on 19-20',
                     text: `Join my bill using code: ${groupCode}`,
                     url: link,
                 })

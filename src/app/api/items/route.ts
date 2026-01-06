@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
 
         if (!validated.success) {
             return NextResponse.json(
-                { error: validated.error.errors[0].message },
+                { error: validated.error.issues[0].message },
                 { status: 400 }
             )
         }
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
         })
 
         const newSubtotal = allItems.reduce(
-            (sum, item) => sum + item.price * item.quantity,
+            (sum: number, item: { price: number; quantity: number }) => sum + item.price * item.quantity,
             0
         )
 
@@ -101,7 +101,7 @@ export async function PATCH(request: NextRequest) {
 
         if (!validated.success) {
             return NextResponse.json(
-                { error: validated.error.errors[0].message },
+                { error: validated.error.issues[0].message },
                 { status: 400 }
             )
         }
@@ -124,7 +124,7 @@ export async function PATCH(request: NextRequest) {
         })
 
         const newSubtotal = allItems.reduce(
-            (sum, item) => sum + item.price * item.quantity,
+            (sum: number, item: { price: number; quantity: number }) => sum + item.price * item.quantity,
             0
         )
 
@@ -177,7 +177,7 @@ export async function DELETE(request: NextRequest) {
         })
 
         const newSubtotal = allItems.reduce(
-            (sum, item) => sum + item.price * item.quantity,
+            (sum: number, item: { price: number; quantity: number }) => sum + item.price * item.quantity,
             0
         )
 

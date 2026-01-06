@@ -13,13 +13,13 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'SplitGravity - Split Bills Effortlessly',
-  description: 'Split bills with friends easily. Scan receipts, select items, and automatically calculate each person\'s share including tax and tips.',
-  keywords: ['bill splitting', 'expense sharing', 'receipt scanner', 'group payments'],
-  authors: [{ name: 'SplitGravity' }],
+  title: '19-20 - Professional Bill Splitting',
+  description: 'Split bills with precision. Scan receipts, select items, and automatically calculate each person\'s share including tax and tips.',
+  keywords: ['bill splitting', 'expense sharing', 'receipt scanner', 'group payments', '19-20'],
+  authors: [{ name: '19-20' }],
   openGraph: {
-    title: 'SplitGravity - Split Bills Effortlessly',
-    description: 'Split bills with friends easily. Scan receipts, select items, and automatically calculate each person\'s share.',
+    title: '19-20 - Professional Bill Splitting',
+    description: 'Split bills with precision. Scan receipts, select items, and automatically calculate each person\'s share.',
     type: 'website',
   },
 }

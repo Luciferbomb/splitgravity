@@ -1,0 +1,44 @@
+Initializing Prisma Client...
+TURSO_DATABASE_URL: libsql://splitgravity-ashu1409.aws-ap-south-1.turso.io
+TURSO_AUTH_TOKEN length: 279
+Testing DB connection...
+Connection failed: PrismaClientKnownRequestError: 
+Invalid `prisma.user.findMany()` invocation in
+/Users/ashutoshranjan/Splitgravity/splitgravity/scripts/test-db.ts:6:41
+
+  3 async function main() {
+  4     console.log('Testing DB connection...');
+  5     try {
+→ 6         const users = await prisma.user.findMany(
+URL_INVALID: The URL 'undefined' is not in a valid format
+    at ei.handleRequestError (/Users/ashutoshranjan/Splitgravity/splitgravity/node_modules/@prisma/client/src/runtime/RequestHandler.ts:228:13)
+    at ei.handleAndLogRequestError (/Users/ashutoshranjan/Splitgravity/splitgravity/node_modules/@prisma/client/src/runtime/RequestHandler.ts:174:12)
+    at ei.request (/Users/ashutoshranjan/Splitgravity/splitgravity/node_modules/@prisma/client/src/runtime/RequestHandler.ts:143:12)
+    at async a (/Users/ashutoshranjan/Splitgravity/splitgravity/node_modules/@prisma/client/src/runtime/getPrismaClient.ts:833:24)
+    at async main (/Users/ashutoshranjan/Splitgravity/splitgravity/scripts/test-db.ts:6:23) {
+  code: 'URL_INVALID',
+  meta: { modelName: 'User' },
+  clientVersion: '6.19.1'
+}
+/Users/ashutoshranjan/Splitgravity/splitgravity/node_modules/@prisma/adapter-libsql/node_modules/@libsql/core/lib-cjs/uri.js:12
+        throw new api_js_1.LibsqlError(`The URL '${text}' is not in a valid format`, "URL_INVALID");
+              ^
+
+LibsqlError: URL_INVALID: The URL 'undefined' is not in a valid format
+    at parseUri (/Users/ashutoshranjan/Splitgravity/splitgravity/node_modules/@prisma/adapter-libsql/node_modules/@libsql/core/lib-cjs/uri.js:12:15)
+    at expandConfig (/Users/ashutoshranjan/Splitgravity/splitgravity/node_modules/@prisma/adapter-libsql/node_modules/@libsql/core/lib-cjs/config.js:29:39)
+    at createClient (/Users/ashutoshranjan/Splitgravity/splitgravity/node_modules/@prisma/adapter-libsql/node_modules/@libsql/client/lib-cjs/node.js:28:52)
+    at PrismaLibSqlAdapterFactory.createClient (/Users/ashutoshranjan/Splitgravity/splitgravity/node_modules/@prisma/adapter-libsql/dist/index-node.js:420:43)
+    at PrismaLibSqlAdapterFactory.connect (/Users/ashutoshranjan/Splitgravity/splitgravity/node_modules/@prisma/adapter-libsql/dist/index-node.js:408:57)
+    at Qr.loadEngine (/Users/ashutoshranjan/Splitgravity/splitgravity/node_modules/@prisma/client/src/runtime/core/engines/library/LibraryEngine.ts:303:52)
+    at async Qr.instantiateLibrary (/Users/ashutoshranjan/Splitgravity/splitgravity/node_modules/@prisma/client/src/runtime/core/engines/library/LibraryEngine.ts:243:5)
+    at async Qr.start (/Users/ashutoshranjan/Splitgravity/splitgravity/node_modules/@prisma/client/src/runtime/core/engines/library/LibraryEngine.ts:402:5)
+    at async Qr.request (/Users/ashutoshranjan/Splitgravity/splitgravity/node_modules/@prisma/client/src/runtime/core/engines/library/LibraryEngine.ts:520:7)
+    at async Object.singleLoader (/Users/ashutoshranjan/Splitgravity/splitgravity/node_modules/@prisma/client/src/runtime/RequestHandler.ts:112:26) {
+  code: 'URL_INVALID',
+  rawCode: undefined,
+  clientVersion: '6.19.1',
+  [cause]: undefined
+}
+
+Node.js v23.6.1

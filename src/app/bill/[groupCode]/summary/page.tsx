@@ -60,7 +60,9 @@ export default function SummaryPage() {
 
     const fetchBill = useCallback(async () => {
         try {
-            const response = await fetch(`/api/bills?groupCode=${groupCode}`)
+            const response = await fetch(`/api/bills?groupCode=${groupCode}`, {
+                cache: 'no-store'
+            })
             if (!response.ok) return
 
             const data: BillData = await response.json()
@@ -118,13 +120,36 @@ export default function SummaryPage() {
         fetchBill()
     }, [fetchBill])
 
+    const [updatingPayment, setUpdatingPayment] = useState<string | null>(null)
+
     const handlePaymentUpdate = async (userId: string) => {
         if (!bill) return
 
         const amount = parseFloat(paymentInputs[userId]) || 0
+        setUpdatingPayment(userId)
+
+        // Optimistic Update
+        const updatedParticipants = bill.participants.map(p =>
+            p.userId === userId ? { ...p, amountPaid: amount } : p
+        )
+
+        const updatedBill = { ...bill, participants: updatedParticipants }
+        setBill(updatedBill)
+
+        // Recalculate settlements locally
+        const participantData = updatedParticipants.map((p) => {
+            const breakdown = breakdowns.get(p.userId)
+            return {
+                userId: p.userId,
+                userName: p.user.name,
+                amountOwed: breakdown?.total || 0,
+                amountPaid: p.amountPaid || 0,
+            }
+        })
+        setSettlements(calculateSettlements(participantData))
 
         try {
-            await fetch('/api/payments', {
+            const res = await fetch('/api/payments', {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -134,10 +159,17 @@ export default function SummaryPage() {
                 }),
             })
 
+            if (!res.ok) throw new Error('Failed to update')
+
             setEditingPayment(null)
             await fetchBill()
         } catch (error) {
             console.error('Failed to update payment:', error)
+            alert('Failed to save payment. Please try again.')
+            // Revert to server state on error
+            fetchBill()
+        } finally {
+            setUpdatingPayment(null)
         }
     }
 
@@ -251,10 +283,19 @@ export default function SummaryPage() {
 
                 {/* Payment Input Section */}
                 <section className="space-y-4">
-                    <h2 className="font-semibold text-[var(--text-secondary)] flex items-center gap-2">
-                        <Wallet size={18} />
-                        Who Paid How Much?
-                    </h2>
+                    <div className="flex items-center justify-between">
+                        <h2 className="font-semibold text-[var(--text-secondary)] flex items-center gap-2">
+                            <Wallet size={18} />
+                            Who Paid How Much?
+                        </h2>
+                        <div className="tooltip" data-tip="Enter the actual amount each person paid to the restaurant">
+                            <AlertTriangle size={14} className="text-[var(--text-muted)]" />
+                        </div>
+                    </div>
+
+                    <p className="text-xs text-[var(--text-muted)] -mt-2">
+                        Enter the amount each person paid to the restaurant. If one person paid the whole bill, enter the full amount for them.
+                    </p>
 
                     <div className="glass-card p-4 space-y-3">
                         {participantsWithBreakdowns.map((p) => (
@@ -282,21 +323,27 @@ export default function SummaryPage() {
                                                 })}
                                                 className="input w-24 pl-6 text-right"
                                                 placeholder="0"
+                                                autoFocus
                                             />
                                         </div>
                                         <button
                                             onClick={() => handlePaymentUpdate(p.userId)}
-                                            className="p-2 bg-[var(--primary)] rounded-lg text-white"
+                                            disabled={updatingPayment === p.userId}
+                                            className="p-2 bg-indigo-600 rounded-lg text-white hover:bg-indigo-700 disabled:opacity-50"
                                         >
-                                            <Check size={16} />
+                                            {updatingPayment === p.userId ? (
+                                                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                            ) : (
+                                                <Check size={16} />
+                                            )}
                                         </button>
                                     </div>
                                 ) : (
                                     <button
                                         onClick={() => setEditingPayment(p.userId)}
-                                        className="text-right"
+                                        className="text-right hover:bg-[var(--surface)] p-1 rounded transition-colors"
                                     >
-                                        <p className="money text-[var(--primary)]">
+                                        <p className={`money ${p.amountPaid > 0 ? 'text-[var(--primary)]' : 'text-[var(--text-muted)]'}`}>
                                             {formatCurrency(p.amountPaid || 0)}
                                         </p>
                                         <p className="text-xs text-[var(--text-muted)]">Tap to edit</p>

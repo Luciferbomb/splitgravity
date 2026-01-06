@@ -22,7 +22,7 @@ export const useUserStore = create<UserStore>()(
             clearUser: () => set({ currentUser: null }),
         }),
         {
-            name: 'splitgravity-user',
+            name: '19-20-user',
         }
     )
 )

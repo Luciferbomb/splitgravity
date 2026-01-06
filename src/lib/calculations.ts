@@ -98,12 +98,13 @@ export function calculateAllUserShares(
     )
 
     // Distribute tax and service charge proportionally
+    // Distribute tax and service charge proportionally
     for (const breakdown of userBreakdowns.values()) {
+        let proportion = 0
         if (totalItemsSubtotal > 0) {
-            const percentage = breakdown.itemsSubtotal / totalItemsSubtotal
-            breakdown.percentage = roundToTwo(percentage * 100)
-            breakdown.taxShare = roundToTwo(bill.tax * percentage)
-            breakdown.serviceChargeShare = roundToTwo(bill.serviceCharge * percentage)
+            proportion = breakdown.itemsSubtotal / totalItemsSubtotal
+            breakdown.taxShare = roundToTwo(bill.tax * proportion)
+            breakdown.serviceChargeShare = roundToTwo(bill.serviceCharge * proportion)
         }
 
         // Round subtotal
@@ -113,6 +114,11 @@ export function calculateAllUserShares(
         breakdown.total = roundToTwo(
             breakdown.itemsSubtotal + breakdown.taxShare + breakdown.serviceChargeShare
         )
+
+        // Calculate percentage of total bill
+        breakdown.percentage = bill.total > 0
+            ? roundToTwo((breakdown.total / bill.total) * 100)
+            : 0
     }
 
     return userBreakdowns
