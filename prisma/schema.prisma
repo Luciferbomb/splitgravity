@@ -1,0 +1,74 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  phone     String?
+  createdAt DateTime @default(now())
+
+  bills      BillParticipant[]
+  selections ItemSelection[]
+}
+
+model Bill {
+  id            String    @id @default(cuid())
+  groupCode     String    @unique
+  name          String    @default("Untitled Bill")
+  receiptImage  String?
+  subtotal      Float     @default(0)
+  tax           Float     @default(0)
+  serviceCharge Float     @default(0)
+  discount      Float     @default(0)
+  total         Float     @default(0)
+  createdAt     DateTime  @default(now())
+  settledAt     DateTime?
+
+  items        BillItem[]
+  participants BillParticipant[]
+}
+
+model BillItem {
+  id       String @id @default(cuid())
+  billId   String
+  name     String
+  quantity Int    @default(1)
+  price    Float
+
+  bill       Bill            @relation(fields: [billId], references: [id], onDelete: Cascade)
+  selections ItemSelection[]
+}
+
+model BillParticipant {
+  id         String  @id @default(cuid())
+  billId     String
+  userId     String
+  amountOwed Float   @default(0)
+  amountPaid Float   @default(0)
+  isPaid     Boolean @default(false)
+
+  bill Bill @relation(fields: [billId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([billId, userId])
+}
+
+model ItemSelection {
+  id         String @id @default(cuid())
+  itemId     String
+  userId     String
+  splitRatio Float  @default(1.0)
+
+  item BillItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  user User     @relation(fields: [userId], references: [id])
+
+  @@unique([itemId, userId])
+}
