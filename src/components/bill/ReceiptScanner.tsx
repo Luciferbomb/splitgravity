@@ -105,23 +105,47 @@ export function ReceiptScanner({ onScanComplete, onCancel }: ReceiptScannerProps
         setError(null)
 
         try {
+            // Log image data info for debugging
+            console.log('Processing image...')
+            console.log('Image data length:', imageData.length)
+            console.log('Image data prefix:', imageData.substring(0, 50))
+
+            // Validate image data format
+            if (!imageData.startsWith('data:image/')) {
+                const errorMsg = `Invalid image format. Got: ${imageData.substring(0, 100)}`
+                console.error(errorMsg)
+                alert(`DEBUG: ${errorMsg}`)
+                throw new Error('Invalid image format. Please try again.')
+            }
+
             const response = await fetch('/api/ocr', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ image: imageData }),
             })
 
+            console.log('API Response status:', response.status)
+
             if (!response.ok) {
                 const errorData = await response.json()
+                console.error('API Error:', errorData)
+                alert(`DEBUG: API Error - ${JSON.stringify(errorData)}`)
                 throw new Error(errorData.error || 'Failed to process receipt')
             }
 
             const data = await response.json()
+            console.log('Extraction successful:', data)
             setExtractedData(data)
             setMode('review')
         } catch (err) {
             console.error('Processing error:', err)
-            setError(err instanceof Error ? err.message : 'Failed to process receipt')
+            console.error('Error type:', err instanceof Error ? err.constructor.name : typeof err)
+            console.error('Error message:', err instanceof Error ? err.message : String(err))
+
+            const errorMessage = err instanceof Error ? err.message : 'Failed to process receipt'
+            alert(`DEBUG: Full error - ${errorMessage}\nType: ${err instanceof Error ? err.constructor.name : typeof err}`)
+
+            setError(errorMessage)
             setMode('select')
         } finally {
             setIsProcessing(false)
