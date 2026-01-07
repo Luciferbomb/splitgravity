@@ -45,6 +45,8 @@ model BillItem {
 
   bill       Bill            @relation(fields: [billId], references: [id], onDelete: Cascade)
   selections ItemSelection[]
+
+  @@index([billId])
 }
 
 model BillParticipant {

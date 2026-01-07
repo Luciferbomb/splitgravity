@@ -73,6 +73,13 @@ export default function NewBillPage() {
 
         setIsCreating(true)
 
+        // Generate a temporary group code for instant navigation
+        const tempGroupCode = `temp-${Date.now()}`
+
+        // Navigate instantly (optimistic)
+        router.push(`/bill/${tempGroupCode}?creating=true`)
+
+        // Create bill in background
         try {
             // Create the bill
             const billResponse = await fetch('/api/bills', {
@@ -86,23 +93,27 @@ export default function NewBillPage() {
                 }),
             })
 
-            if (!billResponse.ok) throw new Error('Failed to create bill')
+            if (!billResponse.ok) {
+                throw new Error('Failed to create bill')
+            }
 
             const bill = await billResponse.json()
 
-            // Add items to the bill
-            for (const item of items) {
-                await fetch('/api/items', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        billId: bill.id,
-                        name: item.name,
-                        quantity: item.quantity,
-                        price: item.price,
-                    }),
-                })
-            }
+            // Batch create items (parallel instead of sequential)
+            await Promise.all(
+                items.map(item =>
+                    fetch('/api/items', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            billId: bill.id,
+                            name: item.name,
+                            quantity: item.quantity,
+                            price: item.price,
+                        }),
+                    })
+                )
+            )
 
             // Join the bill as a participant
             await fetch('/api/bills/join', {
@@ -114,10 +125,12 @@ export default function NewBillPage() {
                 }),
             })
 
-            // Navigate to the bill
-            router.push(`/bill/${bill.groupCode}`)
+            // Replace temp URL with real group code
+            router.replace(`/bill/${bill.groupCode}`)
         } catch (error) {
             console.error('Error creating bill:', error)
+            // If creation fails, show error and go back
+            router.replace('/bill/new?error=creation_failed')
             setIsCreating(false)
         }
     }

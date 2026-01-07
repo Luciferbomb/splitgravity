@@ -107,7 +107,7 @@ export function ReceiptScanner({ onScanComplete, onCancel }: ReceiptScannerProps
                 processImage(imageData)
             } catch (err) {
                 console.error('Canvas toDataURL error:', err)
-                alert(`DEBUG: Canvas error - ${err instanceof Error ? err.message : String(err)}`)
+                // Error already logged to console
                 setError('Failed to process photo. Try uploading an image instead.')
                 stopCamera()
                 setMode('select')
@@ -136,16 +136,13 @@ export function ReceiptScanner({ onScanComplete, onCancel }: ReceiptScannerProps
         setError(null)
 
         try {
-            // Log image data info for debugging
-            console.log('Processing image...')
-            console.log('Image data length:', imageData.length)
-            console.log('Image data prefix:', imageData.substring(0, 50))
+            // Validate image format
 
             // Validate image data format
             if (!imageData.startsWith('data:image/')) {
                 const errorMsg = `Invalid image format. Got: ${imageData.substring(0, 100)}`
                 console.error(errorMsg)
-                alert(`DEBUG: ${errorMsg}`)
+                // Error already logged
                 throw new Error('Invalid image format. Please try again.')
             }
 
@@ -155,26 +152,25 @@ export function ReceiptScanner({ onScanComplete, onCancel }: ReceiptScannerProps
                 body: JSON.stringify({ image: imageData }),
             })
 
-            console.log('API Response status:', response.status)
+            // Check response status
 
             if (!response.ok) {
                 const errorData = await response.json()
                 console.error('API Error:', errorData)
-                alert(`DEBUG: API Error - ${JSON.stringify(errorData)}`)
+                // Error already logged
                 throw new Error(errorData.error || 'Failed to process receipt')
             }
 
             const data = await response.json()
-            console.log('Extraction successful:', data)
+            // Extraction successful
             setExtractedData(data)
             setMode('review')
         } catch (err) {
             console.error('Processing error:', err)
-            console.error('Error type:', err instanceof Error ? err.constructor.name : typeof err)
-            console.error('Error message:', err instanceof Error ? err.message : String(err))
+            // Error already logged to console
 
             const errorMessage = err instanceof Error ? err.message : 'Failed to process receipt'
-            alert(`DEBUG: Full error - ${errorMessage}\nType: ${err instanceof Error ? err.constructor.name : typeof err}`)
+
 
             setError(errorMessage)
             setMode('select')
