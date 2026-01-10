@@ -1,0 +1,136 @@
+/* ============================================
+   ULTRA GLASSMORPHISM STYLES
+   ============================================ */
+
+/* Glass variants */
+.glass-ultra {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+}
+
+.glass-heavy {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(30px) saturate(150%);
+    -webkit-backdrop-filter: blur(30px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+}
+
+.glass-frosted {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px) saturate(120%);
+    -webkit-backdrop-filter: blur(20px) saturate(120%);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 4px 16px 0 rgba(31, 38, 135, 0.1);
+}
+
+.glass-gradient {
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.2) 0%,
+            rgba(255, 255, 255, 0.05) 100%);
+    backdrop-filter: blur(25px) saturate(140%);
+    -webkit-backdrop-filter: blur(25px) saturate(140%);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow:
+        0 8px 32px 0 rgba(31, 38, 135, 0.15),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
+}
+
+/* Depth layers */
+.depth-1 {
+    position: relative;
+    z-index: 1;
+    transform: translateZ(10px);
+}
+
+.depth-2 {
+    position: relative;
+    z-index: 2;
+    transform: translateZ(20px);
+}
+
+.depth-3 {
+    position: relative;
+    z-index: 3;
+    transform: translateZ(30px);
+}
+
+/* Floating effect */
+.floating {
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+/* Gradient mesh background */
+.gradient-mesh {
+    background:
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.3) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(147, 51, 234, 0.3) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.3) 0px, transparent 50%),
+        radial-gradient(at 0% 100%, rgba(236, 72, 153, 0.3) 0px, transparent 50%);
+    animation: meshGradient 15s ease infinite;
+}
+
+@keyframes meshGradient {
+
+    0%,
+    100% {
+        background-position: 0% 0%, 100% 0%, 100% 100%, 0% 100%;
+    }
+
+    25% {
+        background-position: 40% 20%, 80% 30%, 90% 80%, 10% 90%;
+    }
+
+    50% {
+        background-position: 100% 100%, 0% 100%, 0% 0%, 100% 0%;
+    }
+
+    75% {
+        background-position: 60% 80%, 20% 70%, 10% 20%, 90% 10%;
+    }
+}
+
+/* Shimmer effect */
+.shimmer {
+    position: relative;
+    overflow: hidden;
+}
+
+.shimmer::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    right: -50%;
+    bottom: -50%;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.3),
+            transparent);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%) rotate(45deg);
+    }
+
+    100% {
+        transform: translateX(100%) rotate(45deg);
+    }
+}
