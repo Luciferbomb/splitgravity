@@ -2,70 +2,58 @@
 
 /* ============================================
    19-20 - Design System
-   Professional Bill Splitting
+   Dark Glassmorphic Theme
    ============================================ */
 
 :root {
-  /* Primary Colors - Professional Indigo */
-  --primary: #4f46e5;
-  --primary-dark: #4338ca;
+  /* Primary Colors - Vibrant for dark theme */
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
   --primary-light: #818cf8;
 
-  /* Secondary Colors - Slate */
-  --secondary: #64748b;
-  --secondary-dark: #475569;
-  --secondary-light: #94a3b8;
+  /* Secondary Colors */
+  --secondary: #8b5cf6;
+  --secondary-dark: #7c3aed;
+  --secondary-light: #a78bfa;
 
   /* Accent Colors */
   --accent: #10b981;
-  /* Emerald 500 */
   --accent-dark: #059669;
-  /* Emerald 600 */
   --warning: #f59e0b;
-  /* Amber 500 */
   --danger: #ef4444;
-  /* Red 500 */
 
-  /* Light Theme Backgrounds */
-  --background: #ffffff;
-  --background-alt: #f8fafc;
-  /* Slate 50 */
-  --surface: #ffffff;
-  --surface-elevated: #ffffff;
-  --surface-hover: #f1f5f9;
-  /* Slate 100 */
+  /* Dark Theme Backgrounds */
+  --background: #0f172a;
+  --background-alt: #1e293b;
+  --surface: rgba(30, 41, 59, 0.5);
+  --surface-elevated: rgba(51, 65, 85, 0.5);
+  --surface-hover: rgba(71, 85, 105, 0.3);
 
-  /* Text Colors */
-  --foreground: #0f172a;
-  /* Slate 900 */
-  --text-primary: #0f172a;
-  /* Slate 900 */
-  --text-secondary: #475569;
-  /* Slate 600 */
+  /* Text Colors for Dark Theme */
+  --foreground: #f8fafc;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
   --text-muted: #94a3b8;
-  /* Slate 400 */
 
   /* Border & Dividers */
-  --border: #e2e8f0;
-  /* Slate 200 */
-  --border-strong: #cbd5e1;
-  /* Slate 300 */
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.2);
 
   /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-glow: 0 0 15px rgba(79, 70, 229, 0.15);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+  --shadow-glow: 0 0 15px rgba(99, 102, 241, 0.3);
 
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-  --gradient-surface: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  --gradient-surface: linear-gradient(180deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
 
   /* Spacing */
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
   --radius-full: 9999px;
 }
 
@@ -91,7 +79,7 @@ html {
 }
 
 body {
-  background: var(--background-alt);
+  background: linear-gradient(to bottom right, #0f172a, #1e1b4b, #0f172a);
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
   min-height: 100vh;
