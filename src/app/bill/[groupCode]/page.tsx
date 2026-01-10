@@ -12,6 +12,8 @@ import { calculateAllUserShares } from '@/lib/calculations'
 import { UserAvatar } from '@/components/ui/UserAvatar'
 import { Users, AlertTriangle, ArrowRight, Share2 } from 'lucide-react'
 import Link from 'next/link'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Stagger, StaggerItem, FadeIn, SlideIn } from '@/components/animation'
 
 interface BillData {
     id: string

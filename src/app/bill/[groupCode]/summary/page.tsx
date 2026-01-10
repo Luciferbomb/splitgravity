@@ -8,6 +8,9 @@ import { calculateAllUserShares, calculateSettlements, UserBreakdown, Settlement
 import { formatCurrency } from '@/lib/utils'
 import { AlertTriangle, ArrowRight, Wallet, Check } from 'lucide-react'
 import Link from 'next/link'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Stagger, StaggerItem, FadeIn, SlideIn, ScaleIn } from '@/components/animation'
+import { AnimatedNumber } from '@/components/ui/AnimatedNumber'
 
 interface BillData {
     id: string
