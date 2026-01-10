@@ -8,6 +8,9 @@ import { UserSetup } from '@/components/bill/ShareBill'
 import { ReceiptScanner } from '@/components/bill/ReceiptScanner'
 import { formatCurrency } from '@/lib/utils'
 import { Trash2, ArrowRight, Camera, Pencil } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { FadeIn, SlideIn, ScaleIn, Stagger, StaggerItem } from '@/components/animation'
+import { transition } from '@/lib/animations'
 
 interface TempItem {
     id: string
