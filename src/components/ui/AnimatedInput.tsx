@@ -18,7 +18,7 @@ export const AnimatedInput = forwardRef<HTMLInputElement, AnimatedInputProps>(
             <div className="space-y-1">
                 {label && (
                     <motion.label
-                        className="block text-sm font-medium text-slate-700"
+                        className="block text-sm font-medium text-slate-300"
                         initial={{ opacity: 0, y: -4 }}
                         animate={{ opacity: 1, y: 0 }}
                     >
@@ -26,7 +26,11 @@ export const AnimatedInput = forwardRef<HTMLInputElement, AnimatedInputProps>(
                     </motion.label>
                 )}
 
-                <div className="relative">
+                <motion.div
+                    className="relative"
+                    whileHover={{ scale: 1.005 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                >
                     {leftIcon && (
                         <motion.div
                             className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
@@ -40,16 +44,14 @@ export const AnimatedInput = forwardRef<HTMLInputElement, AnimatedInputProps>(
                         </motion.div>
                     )}
 
-                    <motion.input
+                    <input
                         ref={ref}
                         className={`w-full px-4 py-3 ${leftIcon ? 'pl-10' : ''} ${rightIcon ? 'pr-10' : ''} 
-              bg-white border border-slate-200 rounded-xl
-              focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500
-              transition-all ${error ? 'border-red-500' : ''} ${className}`}
+              bg-slate-900/50 border border-slate-700 rounded-xl text-white placeholder-slate-500
+              focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500
+              transition-all backdrop-blur-sm ${error ? 'border-red-500' : ''} ${className}`}
                         onFocus={() => setIsFocused(true)}
                         onBlur={() => setIsFocused(false)}
-                        whileFocus={{ scale: 1.01 }}
-                        transition={{ type: 'spring', stiffness: 300, damping: 25 }}
                         {...props}
                     />
 
@@ -66,11 +68,11 @@ export const AnimatedInput = forwardRef<HTMLInputElement, AnimatedInputProps>(
                         animate={{ scaleX: isFocused ? 1 : 0 }}
                         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                     />
-                </div>
+                </motion.div>
 
                 {error && (
                     <motion.p
-                        className="text-sm text-red-500"
+                        className="text-sm text-red-400"
                         initial={{ opacity: 0, y: -2 }}
                         animate={{ opacity: 1, y: 0 }}
                     >
