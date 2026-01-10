@@ -2,6 +2,9 @@
 
 import { useState, useRef, useCallback } from 'react'
 import { Camera, Upload, X, Loader2, RotateCcw, Check, AlertCircle } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { FadeIn, SlideIn, ScaleIn } from '@/components/animation'
+import { transition } from '@/lib/animations'
 
 interface ExtractedItem {
     name: string
