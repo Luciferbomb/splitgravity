@@ -1,13 +1,13 @@
 'use client'
 
-import { motion, HTMLMotionProps, Variant } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { forwardRef, ButtonHTMLAttributes } from 'react'
 import { Loader2 } from 'lucide-react'
 
 type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger'
 type ButtonSize = 'sm' | 'md' | 'lg'
 
-interface PolymorphicButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'className'> {
+interface PolymorphicButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: ButtonVariant
     size?: ButtonSize
     isLoading?: boolean
@@ -21,8 +21,8 @@ const baseStyles = 'relative inline-flex items-center justify-center font-semibo
 
 const variantStyles: Record<ButtonVariant, string> = {
     primary: 'bg-gradient-to-r from-indigo-600 to-indigo-700 text-white hover:from-indigo-700 hover:to-indigo-800 focus:ring-indigo-500 shadow-lg shadow-indigo-500/20',
-    secondary: 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-slate-300 focus:ring-slate-300',
-    ghost: 'bg-transparent text-slate-600 hover:bg-slate-100 focus:ring-slate-300',
+    secondary: 'bg-slate-800 text-slate-100 border border-slate-700 hover:bg-slate-700 hover:border-slate-600 focus:ring-slate-500',
+    ghost: 'bg-transparent text-slate-300 hover:bg-slate-800 focus:ring-slate-500',
     danger: 'bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 focus:ring-red-500 shadow-lg shadow-red-500/20',
 }
 
@@ -42,70 +42,75 @@ export const PolymorphicButton = forwardRef<HTMLButtonElement, PolymorphicButton
         children,
         fullWidth,
         disabled,
+        className,
         ...props
     }, ref) => {
-        const className = `${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${fullWidth ? 'w-full' : ''}`
+        const buttonClassName = `${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${fullWidth ? 'w-full' : ''} ${className || ''}`
 
         return (
-            <motion.button
-                ref={ref}
-                className={className}
-                disabled={disabled || isLoading}
+            <motion.div
                 whileHover={disabled || isLoading ? {} : { scale: 1.02, y: -1 }}
                 whileTap={disabled || isLoading ? {} : { scale: 0.98 }}
                 transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-                {...props}
+                className={fullWidth ? 'w-full' : 'inline-block'}
             >
-                {/* Shimmer effect on hover */}
-                <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
-                    initial={{ x: '-100%' }}
-                    whileHover={{ x: '100%' }}
-                    transition={{ duration: 0.6 }}
-                />
+                <button
+                    ref={ref}
+                    className={buttonClassName}
+                    disabled={disabled || isLoading}
+                    {...props}
+                >
+                    {/* Shimmer effect on hover */}
+                    <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                        initial={{ x: '-100%' }}
+                        whileHover={{ x: '100%' }}
+                        transition={{ duration: 0.6 }}
+                    />
 
-                {/* Content */}
-                <span className="relative flex items-center gap-inherit">
-                    {isLoading ? (
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.5 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            className="flex items-center gap-inherit"
-                        >
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                            <span>Loading...</span>
-                        </motion.div>
-                    ) : (
-                        <>
-                            {leftIcon && (
-                                <motion.span
-                                    initial={{ opacity: 0, x: -4 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: 0.1 }}
-                                >
-                                    {leftIcon}
-                                </motion.span>
-                            )}
-                            <motion.span
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.05 }}
+                    {/* Content */}
+                    <span className="relative flex items-center gap-inherit">
+                        {isLoading ? (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.5 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="flex items-center gap-inherit"
                             >
-                                {children}
-                            </motion.span>
-                            {rightIcon && (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                                <span>Loading...</span>
+                            </motion.div>
+                        ) : (
+                            <>
+                                {leftIcon && (
+                                    <motion.span
+                                        initial={{ opacity: 0, x: -4 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: 0.1 }}
+                                    >
+                                        {leftIcon}
+                                    </motion.span>
+                                )}
                                 <motion.span
-                                    initial={{ opacity: 0, x: 4 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: 0.1 }}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ delay: 0.05 }}
                                 >
-                                    {rightIcon}
+                                    {children}
                                 </motion.span>
-                            )}
-                        </>
-                    )}
-                </span>
-            </motion.button>
+                                {rightIcon && (
+                                    <motion.span
+                                        initial={{ opacity: 0, x: 4 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: 0.1 }}
+                                    >
+                                        {rightIcon}
+                                    </motion.span>
+                                )}
+                            </>
+                        )}
+                    </span>
+                </button>
+            </motion.div>
         )
     }
 )
