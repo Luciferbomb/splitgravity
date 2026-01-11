@@ -1,0 +1,80 @@
+/* Text Visibility Overrides for Dark Theme */
+
+/* Ensure all headings are white */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #ffffff !important;
+}
+
+/* Ensure all paragraphs are light */
+p {
+    color: #e2e8f0 !important;
+}
+
+/* Ensure all spans are visible */
+span {
+    color: inherit;
+}
+
+/* Labels should be light */
+label {
+    color: #cbd5e1 !important;
+}
+
+/* Input text should be white */
+input,
+textarea,
+select {
+    color: #ffffff !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #94a3b8 !important;
+}
+
+/* Button text should be white */
+button {
+    color: #ffffff !important;
+}
+
+/* Link colors */
+a {
+    color: #818cf8 !important;
+}
+
+a:hover {
+    color: #a5b4fc !important;
+}
+
+/* Utility classes */
+.text-white {
+    color: #ffffff !important;
+}
+
+.text-light {
+    color: #e2e8f0 !important;
+}
+
+.text-muted-light {
+    color: #94a3b8 !important;
+}
+
+/* Override any dark text */
+.text-slate-900,
+.text-slate-800,
+.text-slate-700,
+.text-gray-900,
+.text-gray-800,
+.text-black {
+    color: #ffffff !important;
+}
+
+/* Ensure div content is visible */
+div {
+    color: inherit;
+}
